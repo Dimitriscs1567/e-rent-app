@@ -1,0 +1,1 @@
+export 'apartment_api_provider.dart';
