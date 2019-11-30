@@ -29,9 +29,9 @@ class ApartmentApiProvider{
 
       List<Apartment> apartments = [];
 
-      jsonApartments.forEach((jsonApartment){
-        apartments.add(Apartment.fromJson(jsonApartment));
-      });
+      for(dynamic jsonApartment in jsonApartments){
+        apartments.add(await Apartment.fromJson(jsonApartment));
+      }
 
       return apartments;
     }

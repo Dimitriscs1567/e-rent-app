@@ -141,7 +141,6 @@ class _ApartmentsPageState extends State<ApartmentsPage> {
             }
 
             return _apartmentListWidget();
-
           }
           return null;
         },
@@ -252,11 +251,13 @@ class _ApartmentsPageState extends State<ApartmentsPage> {
           },
           onPressedFavorite: () async {
             SharedPreferences prefs = await SharedPreferences.getInstance();
-            if(_listToShow[index].isFavorite)
+            if(!_listToShow[index].isFavorite) {
               prefs.setBool(
-                _listToShow[index].id.toString() + ApartmentsService.isFavoritePreferences,
-                _listToShow[index].isFavorite
+                  _listToShow[index].id.toString() +
+                      ApartmentsService.isFavoritePreferences,
+                  true
               );
+            }
             else
               prefs.remove(_listToShow[index].id.toString() + ApartmentsService.isFavoritePreferences);
             setState(() {

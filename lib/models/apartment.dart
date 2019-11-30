@@ -1,7 +1,9 @@
 import 'dart:core';
 
+import 'package:e_enoikiazetai/services/apartments_service.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Apartment extends Equatable{
   int id;
@@ -37,7 +39,13 @@ class Apartment extends Equatable{
   List<Object> get props => [id, date, availableFrom, type, squareMeters,
     floor, address, region, phones, notes, specs, isFavorite];
 
-  static Apartment fromJson(dynamic json){
+  static Future<Apartment> fromJson(dynamic json) async{
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String notes = prefs.containsKey(json["id"].toString())
+        ? prefs.getString(json["id"].toString()) : "";
+    bool isFavorite = prefs.containsKey(json["id"].toString() + ApartmentsService.isFavoritePreferences)
+        ? prefs.getBool(json["id"].toString() + ApartmentsService.isFavoritePreferences) : false;
 
     return Apartment(
       id: json["id"],
@@ -50,8 +58,8 @@ class Apartment extends Equatable{
       region: json["region"] != null ? json["region"] : "",
       phones: json["phones"].split(","),
       specs: json["features"] != null ? json["features"].split(",") : List<String>(),
-      isFavorite: false,
-      notes: "",
+      isFavorite: isFavorite,
+      notes: notes,
     );
   }
 
