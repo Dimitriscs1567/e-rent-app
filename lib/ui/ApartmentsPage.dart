@@ -66,7 +66,7 @@ class _ApartmentsPageState extends State<ApartmentsPage> {
       drawer: _drawer(),
       appBar: AppBar(
         backgroundColor: Colors.grey[600],
-        title: Text("e-Enoikiazetai"),
+        title: Text("e-Rent"),
         actions: <Widget>[
           IconButton(
             icon: _showFavorites ? Icon(Icons.favorite)
@@ -377,7 +377,7 @@ class _ApartmentsPageState extends State<ApartmentsPage> {
               padding: new EdgeInsets.symmetric(vertical: 10.0),
               alignment: Alignment.center,
               color: Colors.grey[800],
-              child: Text("Ιδιότητα:",
+              child: Text("Χαρακτηριστικά:",
                 style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold,
                     color: Colors.white),
               ),
