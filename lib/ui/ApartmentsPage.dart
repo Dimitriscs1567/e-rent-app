@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:e_enoikiazetai/blocs/apartment/blocs.dart';
 import 'package:e_enoikiazetai/models/models.dart';
 import 'package:e_enoikiazetai/services/apartments_service.dart';
@@ -142,7 +143,22 @@ class _ApartmentsPageState extends State<ApartmentsPage> {
 
             return _apartmentListWidget();
           }
-          return null;
+          return StreamBuilder<ConnectivityResult>(
+            stream: Connectivity().onConnectivityChanged,
+            builder: (context, snapshot) {
+              if(snapshot.data == ConnectivityResult.mobile
+                  || snapshot.data == ConnectivityResult.wifi){
+                BlocProvider.of<ApartmentBloc>(context).add(FetchApartments());
+              }
+
+              return Center(
+                child: Text("No internet connection detected. Please go online.",
+                  style: TextStyle(color: Colors.white, fontSize: 22.0,),
+                  textAlign: TextAlign.center,
+                ),
+              );
+            },
+          );
         },
       ),
     );

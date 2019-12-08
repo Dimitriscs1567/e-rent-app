@@ -63,6 +63,19 @@ class Apartment extends Equatable{
     );
   }
 
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "date": date,
+    "availableFrom": availableFrom,
+    "type": type,
+    "squareMeters": squareMeters,
+    "floor": floor,
+    "address" : address,
+    "region" : region,
+    "phones" : getPhonesAsString(),
+    "features" : getSpecificationsAsString(),
+  };
+
   String getSpecificationsAsString(){
     String result = "";
 
@@ -70,6 +83,17 @@ class Apartment extends Equatable{
 
     if(specs.length > 0){
       return result.substring(0, result.length-2);
+    }
+    return result;
+  }
+
+  String getPhonesAsString(){
+    String result = "";
+
+    phones.forEach((phone) => result += "$phone,");
+
+    if(phones.length > 0){
+      return result.substring(0, result.length-1);
     }
     return result;
   }

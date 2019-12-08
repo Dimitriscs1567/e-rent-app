@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'e-rent',
       home: BlocProvider<ApartmentBloc>(
-        builder: (context) => ApartmentBloc(
+        create: (context) => ApartmentBloc(
           apartmentRepository: ApartmentRepository(
             apartmentApiProvider: ApartmentApiProvider()
           ),
