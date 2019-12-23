@@ -47,6 +47,9 @@ class Apartment extends Equatable{
     bool isFavorite = prefs.containsKey(json["id"].toString() + ApartmentsService.isFavoritePreferences)
         ? prefs.getBool(json["id"].toString() + ApartmentsService.isFavoritePreferences) : false;
 
+    List<String> specs = json["features"] != null ? json["features"].split(",") : List<String>();
+    specs.remove('');
+
     return Apartment(
       id: json["id"],
       date: json["date"],
@@ -57,7 +60,7 @@ class Apartment extends Equatable{
       address: json["address"] != null ? json["address"] : "",
       region: json["region"] != null ? json["region"] : "",
       phones: json["phones"].split(","),
-      specs: json["features"] != null ? json["features"].split(",") : List<String>(),
+      specs: specs,
       isFavorite: isFavorite,
       notes: notes,
     );

@@ -61,106 +61,107 @@ class _ApartmentsPageState extends State<ApartmentsPage> {
       BlocProvider.of<ApartmentBloc>(context).add(FetchApartments());
     }
 
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: Colors.black,
-      drawer: _drawer(),
-      appBar: AppBar(
-        backgroundColor: Colors.grey[600],
-        title: Text("e-Rent"),
-        actions: <Widget>[
-          IconButton(
-            icon: _showFavorites ? Icon(Icons.favorite)
-                : Icon(Icons.favorite_border),
-            tooltip: "Αγαπημένα",
-            onPressed: (){
-              setState(() {
-                _showFavorites = !_showFavorites;
-              });
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.sort, color: smColor,),
-            tooltip: "Ταξινόμηση με τα τετραγωνικά",
-            onPressed: (){
-              setState(() {
-                _sortTimePressedType = 0;
-                _sortTimePressedSm++;
-                if(_sortTimePressedSm == 3)
-                  _sortTimePressedSm = 0;
-              });
-
-              if(_sortTimePressedSm > 0) {
-                String text = _sortTimePressedSm == 1 ? "Ταξινόμηση με τα "
-                    "τετραγωνικά (Από μεγαλύτερο προς μικρότερο)"
-                    : "Ταξινόμηση με τα τετραγωνικά (Από μικρότερο προς μεγαλύτερο)";
-                _scaffoldKey.currentState.showSnackBar(SnackBar(
-                  content: Text(text, textAlign: TextAlign.center,),
-                  duration: Duration(milliseconds: 1500),
-                ));
-              }
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.sort_by_alpha, color: typeColor,),
-            tooltip: "Ταξινόμηση με τον τύπο",
-            onPressed: (){
-              setState(() {
-                _sortTimePressedSm = 0;
-                _sortTimePressedType++;
-                if(_sortTimePressedType == 3)
-                  _sortTimePressedType = 0;
-
-                if(_sortTimePressedType > 0) {
-                  _scaffoldKey.currentState.showSnackBar(SnackBar(
-                    content: Text("Ταξινόμηση με τον τύπο", textAlign: TextAlign.center,),
-                    duration: Duration(milliseconds: 1500),
-                  ));
-                }
-              });
-            },
-          ),
-        ],
-      ),
-      body: BlocBuilder<ApartmentBloc, ApartmentState>(
-        builder: (context, state){
-          if(state is ApartmentLoading){
-            return Center(child: CircularProgressIndicator());
+    return BlocBuilder<ApartmentBloc, ApartmentState>(
+      builder: (context, state) {
+        if(state is ApartmentLoading){
+          return Center(child: CircularProgressIndicator());
+        }
+        else if(state is ApartmentLoaded){
+          if(state.apartments.isEmpty){
+            BlocProvider.of<ApartmentBloc>(context).add(EmptyApartments());
+            return null;
           }
-          else if(state is ApartmentLoaded){
-            if(state.apartments.isEmpty){
-              BlocProvider.of<ApartmentBloc>(context).add(EmptyApartments());
-              return null;
-            }
 
-            if(ApartmentsService.apartments == null){
-              ApartmentsService.apartments = state.apartments;
-            }
-
-            if(_apartmentTypes.keys.length == 0){
-              _fillCheckBoxChoices();
-            }
-
-            return _apartmentListWidget();
+          if(ApartmentsService.apartments == null){
+            ApartmentsService.apartments = state.apartments;
           }
-          return StreamBuilder<ConnectivityResult>(
-            stream: Connectivity().onConnectivityChanged,
-            builder: (context, snapshot) {
-              if(snapshot.data == ConnectivityResult.mobile
-                  || snapshot.data == ConnectivityResult.wifi){
-                BlocProvider.of<ApartmentBloc>(context).add(FetchApartments());
-              }
 
-              return Center(
-                child: Text("No internet connection detected. Please go online.",
-                  style: TextStyle(color: Colors.white, fontSize: 22.0,),
-                  textAlign: TextAlign.center,
+          if(_apartmentTypes.keys.length == 0){
+            _fillCheckBoxChoices();
+          }
+
+          return Scaffold(
+            key: _scaffoldKey,
+            backgroundColor: Colors.black,
+            drawer: _drawer(),
+            appBar: AppBar(
+              backgroundColor: Colors.grey[600],
+              title: Text("e-Rent"),
+              actions: <Widget>[
+                IconButton(
+                  icon: _showFavorites ? Icon(Icons.favorite)
+                      : Icon(Icons.favorite_border),
+                  tooltip: "Αγαπημένα",
+                  onPressed: (){
+                    setState(() {
+                      _showFavorites = !_showFavorites;
+                    });
+                  },
                 ),
-              );
-            },
+                IconButton(
+                  icon: Icon(Icons.sort, color: smColor,),
+                  tooltip: "Ταξινόμηση με τα τετραγωνικά",
+                  onPressed: (){
+                    setState(() {
+                      _sortTimePressedType = 0;
+                      _sortTimePressedSm++;
+                      if(_sortTimePressedSm == 3)
+                        _sortTimePressedSm = 0;
+                    });
+
+                    if(_sortTimePressedSm > 0) {
+                      String text = _sortTimePressedSm == 1 ? "Ταξινόμηση με τα "
+                          "τετραγωνικά (Από μεγαλύτερο προς μικρότερο)"
+                          : "Ταξινόμηση με τα τετραγωνικά (Από μικρότερο προς μεγαλύτερο)";
+                      _scaffoldKey.currentState.showSnackBar(SnackBar(
+                        content: Text(text, textAlign: TextAlign.center,),
+                        duration: Duration(milliseconds: 1500),
+                      ));
+                    }
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.sort_by_alpha, color: typeColor,),
+                  tooltip: "Ταξινόμηση με τον τύπο",
+                  onPressed: (){
+                    setState(() {
+                      _sortTimePressedSm = 0;
+                      _sortTimePressedType++;
+                      if(_sortTimePressedType == 3)
+                        _sortTimePressedType = 0;
+
+                      if(_sortTimePressedType > 0) {
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text("Ταξινόμηση με τον τύπο", textAlign: TextAlign.center,),
+                          duration: Duration(milliseconds: 1500),
+                        ));
+                      }
+                    });
+                  },
+                ),
+              ],
+            ),
+            body: _apartmentListWidget(),
           );
-        },
-      ),
+        }
+
+        return StreamBuilder<ConnectivityResult>(
+          stream: Connectivity().onConnectivityChanged,
+          builder: (context, snapshot) {
+            if(snapshot.data == ConnectivityResult.mobile
+                || snapshot.data == ConnectivityResult.wifi){
+              BlocProvider.of<ApartmentBloc>(context).add(FetchApartments());
+            }
+
+            return Center(
+              child: Text("No internet connection detected. Please go online.",
+                style: TextStyle(color: Colors.white, fontSize: 22.0,),
+                textAlign: TextAlign.center,
+              ),
+            );
+          },
+        );
+      }
     );
   }
 
@@ -245,12 +246,7 @@ class _ApartmentsPageState extends State<ApartmentsPage> {
             });
           },
           onPressedPhone: () async {
-            if(_listToShow[index].phones.length == 1){
-              await _callNumber(_listToShow[index].phones[0]);
-            }
-            else{
-              _showDialogWithPhones(_listToShow[index].phones);
-            }
+            _showDialogWithPhones(_listToShow[index].phones);
           },
           onPressedMap: () async{
             String address = _listToShow[index].address;
